@@ -8,15 +8,19 @@ import 'dimens.dart';
 abstract final class AppTheme {
   static TextTheme _textTheme() {
     final base = GoogleFonts.plusJakartaSansTextTheme();
-    TextStyle s(TextStyle? t, double size, FontWeight w, double lh,
-            [double ls = 0]) =>
-        (t ?? const TextStyle()).copyWith(
-          fontSize: size,
-          fontWeight: w,
-          height: lh / size,
-          letterSpacing: ls * size,
-          color: AppColors.onSurface,
-        );
+    TextStyle s(
+      TextStyle? t,
+      double size,
+      FontWeight w,
+      double lh, [
+      double ls = 0,
+    ]) => (t ?? const TextStyle()).copyWith(
+      fontSize: size,
+      fontWeight: w,
+      height: lh / size,
+      letterSpacing: ls * size,
+      color: AppColors.onSurface,
+    );
 
     return base.copyWith(
       displayLarge: s(base.displayLarge, 40, FontWeight.w700, 48, -0.02),

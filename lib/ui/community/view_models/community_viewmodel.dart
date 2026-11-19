@@ -136,8 +136,7 @@ class CommunityViewModel extends ViewModel {
   }
 
   /// Substitui o placeholder "me" pelos dados reais do usuário.
-  UserProfile _resolve(UserProfile p) =>
-      p.id == user?.id ? (user ?? p) : p;
+  UserProfile _resolve(UserProfile p) => p.id == user?.id ? (user ?? p) : p;
 
   void _onChanged() => scheduleReload(() async {
     await _load();
@@ -151,9 +150,9 @@ class CommunityViewModel extends ViewModel {
         c.copyWith(members: c.members.map(_resolve).toList()),
     ];
 
-    if (_selectedId == null ||
-        !_challenges.any((c) => c.id == _selectedId)) {
-      _selectedId = activeChallenges.firstOrNull?.id ?? _challenges.firstOrNull?.id;
+    if (_selectedId == null || !_challenges.any((c) => c.id == _selectedId)) {
+      _selectedId =
+          activeChallenges.firstOrNull?.id ?? _challenges.firstOrNull?.id;
     }
 
     final fr = await _repo.getFriends();

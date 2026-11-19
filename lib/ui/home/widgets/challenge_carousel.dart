@@ -119,12 +119,17 @@ class ChallengeCarousel extends StatelessWidget {
                               : s.recentAuthors,
                           size: 28,
                         ),
-                        const Spacer(),
-                        Text(
-                          s.checkInsToday == 1
-                              ? '1 check-in hoje'
-                              : '${s.checkInsToday} check-ins hoje',
-                          style: t.labelMedium,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            s.checkInsToday == 1
+                                ? '1 check-in hoje'
+                                : '${s.checkInsToday} check-ins hoje',
+                            style: t.labelMedium,
+                            textAlign: TextAlign.end,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),

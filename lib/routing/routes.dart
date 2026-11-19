@@ -1,6 +1,7 @@
 /// Caminhos das rotas do app.
 abstract final class Routes {
   static const login = '/login';
+  static const register = '/cadastro';
   static const home = '/';
   static const rituals = '/rituais';
   static const newRitual = '/rituais/novo';

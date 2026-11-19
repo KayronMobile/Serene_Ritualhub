@@ -105,21 +105,31 @@ class MetricGrid extends StatelessWidget {
                 background: AppColors.tertiaryFixed,
                 foreground: AppColors.tertiaryContainer,
               ),
-              const Spacer(),
-              Text(
-                '$pct%',
-                style: t.labelLarge?.copyWith(color: AppColors.tertiaryContainer),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '$pct%',
+                  textAlign: TextAlign.end,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.labelLarge?.copyWith(
+                    color: AppColors.tertiaryContainer,
+                  ),
+                ),
               ),
             ],
           ),
           const SizedBox(height: Dimens.spaceMd),
           Text('Hidratação', style: t.labelMedium),
           const SizedBox(height: 2),
-          _ValueLine(value: _thousands(log.waterMl), goal: ' /${_thousands(goals.waterMl)}ml'),
+          _ValueLine(
+            value: _thousands(log.waterMl),
+            goal: ' /${_thousands(goals.waterMl)}ml',
+          ),
           const SizedBox(height: Dimens.spaceMd),
           SizedBox(
             width: double.infinity,
-            child: FilledButton.icon(
+            child: FilledButton(
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(40),
                 backgroundColor: AppColors.tertiaryFixed,
@@ -127,8 +137,17 @@ class MetricGrid extends StatelessWidget {
                 padding: EdgeInsets.zero,
               ),
               onPressed: () => onAddWater(goals.waterIncrementMl),
-              icon: const Icon(Icons.add, size: 18),
-              label: Text('+${goals.waterIncrementMl}ml'),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.add, size: 18),
+                    const SizedBox(width: 4),
+                    Text('+${goals.waterIncrementMl}ml'),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -143,7 +162,9 @@ class MetricGrid extends StatelessWidget {
       padding: const EdgeInsets.all(Dimens.spaceMd + 2),
       onTap: () => showSleepSheet(
         context,
-        initialMinutes: log.sleepMinutes == 0 ? goals.sleepMinutes : log.sleepMinutes,
+        initialMinutes: log.sleepMinutes == 0
+            ? goals.sleepMinutes
+            : log.sleepMinutes,
         initialQuality: log.deepSleepPercent ?? 85,
         onSave: onLogSleep,
       ),
@@ -157,29 +178,63 @@ class MetricGrid extends StatelessWidget {
                 background: AppColors.primaryFixed,
                 foreground: AppColors.primaryContainer,
               ),
-              const Spacer(),
+              const SizedBox(width: 8),
               if (hit)
-                const PillBadge(label: 'Meta ✓', dense: true)
+                // Indicador compacto no topo; a tag legível fica abaixo.
+                const Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.check_circle,
+                      size: 20,
+                      color: AppColors.primaryContainer,
+                    ),
+                  ),
+                )
               else if (log.sleepMinutes > 0)
-                Text(
-                  '${(log.sleepProgress(goals) * 100).round()}%',
-                  style: t.labelLarge,
+                Expanded(
+                  child: Text(
+                    '${(log.sleepProgress(goals) * 100).round()}%',
+                    textAlign: TextAlign.end,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: t.labelLarge,
+                  ),
                 ),
             ],
           ),
           const SizedBox(height: Dimens.spaceMd),
           Text('Descanso', style: t.labelMedium),
           const SizedBox(height: 2),
-          Text(
-            log.sleepMinutes == 0 ? 'Registrar' : Dates.hoursMinutes(log.sleepMinutes),
-            style: t.headlineLarge?.copyWith(fontWeight: FontWeight.w700),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              log.sleepMinutes == 0
+                  ? 'Registrar'
+                  : Dates.hoursMinutes(log.sleepMinutes),
+              maxLines: 1,
+              style: t.headlineLarge?.copyWith(fontWeight: FontWeight.w700),
+            ),
           ),
+          if (hit) ...[
+            const SizedBox(height: 6),
+            // Linha própria: usa toda a largura do cartão, em tamanho normal.
+            // Só encolhe um pouco em telas mínimas com fonte grande.
+            const FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: PillBadge(label: 'Meta ✓', dense: true),
+            ),
+          ],
           const Spacer(),
           if (log.deepSleepPercent != null)
-            Row(
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 6,
+              runSpacing: 2,
               children: [
                 Text('Profundo', style: t.bodySmall),
-                const Spacer(),
                 Text(
                   '${log.deepSleepPercent}% eficácia',
                   style: t.labelMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -211,21 +266,26 @@ class _ValueLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
-    return Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(
-            text: value,
-            style: t.headlineLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-              fontFeatures: const [FontFeature.tabularFigures()],
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: value,
+              style: t.headlineLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
-          ),
-          TextSpan(
-            text: goal,
-            style: t.bodySmall?.copyWith(color: AppColors.onSurfaceVariant),
-          ),
-        ],
+            TextSpan(
+              text: goal,
+              style: t.bodySmall?.copyWith(color: AppColors.onSurfaceVariant),
+            ),
+          ],
+        ),
+        maxLines: 1,
       ),
     );
   }
@@ -264,10 +324,15 @@ class _MetricCard extends StatelessWidget {
           Row(
             children: [
               IconBadge(icon: icon, background: tint, foreground: accent),
-              const Spacer(),
-              Text(
-                '${(progress * 100).round()}%',
-                style: t.labelLarge?.copyWith(color: accent),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '${(progress * 100).round()}%',
+                  textAlign: TextAlign.end,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.labelLarge?.copyWith(color: accent),
+                ),
               ),
             ],
           ),

@@ -54,7 +54,15 @@ abstract final class SeedData {
     email: 'pedro@serene.app',
   );
 
-  static const friends = [camila, gabriel, beatriz, marina, rafael, juliana, pedro];
+  static const friends = [
+    camila,
+    gabriel,
+    beatriz,
+    marina,
+    rafael,
+    juliana,
+    pedro,
+  ];
 
   /// Probabilidade de cada amigo fazer check-in em um dia (simulação).
   static const reliability = {

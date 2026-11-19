@@ -62,7 +62,9 @@ class EvaluateAchievementsUseCase {
     final rituals = (ritualsR as Ok<List<Ritual>>).value;
     // Fontes secundárias: em caso de falha, avaliamos com dados vazios.
     final logs = logsR is Ok<List<RitualLog>> ? logsR.value : <RitualLog>[];
-    final goals = goalsR is Ok<HealthGoals> ? goalsR.value : const HealthGoals();
+    final goals = goalsR is Ok<HealthGoals>
+        ? goalsR.value
+        : const HealthGoals();
     final health = healthR is Ok<List<DailyHealthLog>>
         ? healthR.value
         : <DailyHealthLog>[];
@@ -165,9 +167,8 @@ class EvaluateAchievementsUseCase {
           l.completedAt != null &&
           (l.completedAt!.hour * 60 + l.completedAt!.minute) <= 7 * 60 + 30,
     );
-    bool scheduledOn(DateTime day) => rituals.any(
-      (r) => morningIds.contains(r.id) && r.isScheduledOn(day),
-    );
+    bool scheduledOn(DateTime day) =>
+        rituals.any((r) => morningIds.contains(r.id) && r.isScheduledOn(day));
 
     var streak = 0;
     for (var back = 0; back < _historyDays; back++) {

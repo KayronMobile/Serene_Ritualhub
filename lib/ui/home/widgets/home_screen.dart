@@ -111,19 +111,28 @@ class _HomeContent extends StatelessWidget {
               ),
               const SizedBox(height: Dimens.spaceMd),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceContainer,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.spa_outlined, color: AppColors.secondary, size: 20),
+                    const Icon(
+                      Icons.spa_outlined,
+                      color: AppColors.secondary,
+                      size: 20,
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         '“${vm.quote}”',
-                        style: t.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+                        style: t.bodyMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ),
                   ],
@@ -133,7 +142,8 @@ class _HomeContent extends StatelessWidget {
               if (featured != null)
                 RitualHeroCard(
                   today: featured,
-                  onStart: () => context.push(Routes.player(featured.ritual.id)),
+                  onStart: () =>
+                      context.push(Routes.player(featured.ritual.id)),
                 )
               else
                 _EmptyRituals(onCreate: () => context.push(Routes.newRitual)),
@@ -142,7 +152,9 @@ class _HomeContent extends StatelessWidget {
                 title: 'Métricas do Dia',
                 trailing: Text(
                   vm.updatedLabel,
-                  style: t.bodySmall?.copyWith(color: AppColors.onSurfaceVariant),
+                  style: t.bodySmall?.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
               ),
               const SizedBox(height: Dimens.spaceMd),
@@ -232,7 +244,9 @@ class _HomeContent extends StatelessWidget {
                             Text(other.ritual.name, style: t.titleSmall),
                             const SizedBox(height: 2),
                             Text(
-                              other.ritual.steps.map((s) => s.title).join(' • '),
+                              other.ritual.steps
+                                  .map((s) => s.title)
+                                  .join(' • '),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: t.bodySmall,
@@ -242,10 +256,7 @@ class _HomeContent extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       other.isDone
-                          ? const PillBadge(
-                              label: 'Feito',
-                              icon: Icons.check,
-                            )
+                          ? const PillBadge(label: 'Feito', icon: Icons.check)
                           : PillBadge(
                               label: Dates.hhmm(other.ritual.startMinutes),
                               icon: Icons.alarm_on_outlined,

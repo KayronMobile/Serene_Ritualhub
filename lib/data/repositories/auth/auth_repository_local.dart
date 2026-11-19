@@ -86,12 +86,11 @@ class AuthRepositoryLocal extends AuthRepository {
     final stored = secret is Ok<String?> ? secret.value : null;
 
     if (_user == null || stored == null) {
-      // Primeiro acesso neste aparelho: cria o perfil automaticamente.
-      final name = _nameFromEmail(normalized);
-      _user = UserProfile(id: localUserId, name: name, email: normalized);
-      await _storage.writeJson(_kProfile, _user!.toJson());
-      await _storage.writeString(_kSecret, _hash(normalized, password));
-    } else if (_user!.email.toLowerCase() != normalized ||
+      return const Result.error(
+        AppException('Nenhuma conta encontrada. Toque em "Cadastre-se".'),
+      );
+    }
+    if (_user!.email.toLowerCase() != normalized ||
         stored != _hash(normalized, password)) {
       return const Result.error(AppException('E-mail ou senha incorretos.'));
     }
@@ -114,12 +113,18 @@ class AuthRepositoryLocal extends AuthRepository {
     if (name.trim().length < 2) {
       return const Result.error(AppException('Informe seu nome.'));
     }
-    if (!normalized.contains('@')) {
+    if (!emailPattern.hasMatch(normalized)) {
       return const Result.error(AppException('E-mail inválido.'));
     }
     if (password.length < 6) {
       return const Result.error(
         AppException('A senha precisa ter ao menos 6 caracteres.'),
+      );
+    }
+    await _loadProfile();
+    if (_user != null && _user!.email.toLowerCase() == normalized) {
+      return const Result.error(
+        AppException('Este e-mail já está cadastrado. Faça login.'),
       );
     }
     _user = UserProfile(id: localUserId, name: name.trim(), email: normalized);
@@ -176,12 +181,6 @@ class AuthRepositoryLocal extends AuthRepository {
     return const Result.ok(null);
   }
 
-  static String _nameFromEmail(String email) {
-    final local = email.split('@').first.replaceAll(RegExp(r'[._\-]+'), ' ');
-    final words = local.split(' ').where((w) => w.isNotEmpty);
-    if (words.isEmpty) return 'Você';
-    return words
-        .map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase())
-        .join(' ');
-  }
+  /// Validação simples de formato de e-mail.
+  static final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 }

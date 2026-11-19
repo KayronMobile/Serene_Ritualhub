@@ -154,7 +154,9 @@ class _CheckInCardState extends State<CheckInCard> {
                         TextSpan(
                           text: '${cm.author.firstName} ',
                           style: t.labelLarge,
-                          children: [TextSpan(text: cm.text, style: t.bodySmall)],
+                          children: [
+                            TextSpan(text: cm.text, style: t.bodySmall),
+                          ],
                         ),
                       ),
                     ),

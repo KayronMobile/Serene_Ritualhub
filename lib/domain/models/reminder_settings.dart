@@ -10,6 +10,9 @@ class ReminderSettings {
     this.screensOffMinutes = 21 * 60 + 30,
     this.vulnerableWeekday,
     this.vulnerableLeadMinutes = 30,
+    this.streakEnabled = true,
+    this.streakMinutes = 20 * 60,
+    this.comebackEnabled = true,
   });
 
   /// Notificação no início (com antecedência) de cada ritual.
@@ -30,13 +33,22 @@ class ReminderSettings {
   final int? vulnerableWeekday;
   final int vulnerableLeadMinutes;
 
+  /// Resumo diário da sequência de dias.
+  final bool streakEnabled;
+  final int streakMinutes;
+
+  /// Incentivo para voltar ao app após alguns dias sem abri-lo.
+  final bool comebackEnabled;
+
   /// Horários de lembrete de água entre início e fim.
   List<int> get waterSlots {
     if (waterIntervalMinutes <= 0) return const [];
     return [
-      for (var m = waterStartMinutes;
-          m <= waterEndMinutes;
-          m += waterIntervalMinutes)
+      for (
+        var m = waterStartMinutes;
+        m <= waterEndMinutes;
+        m += waterIntervalMinutes
+      )
         m,
     ];
   }
@@ -52,6 +64,9 @@ class ReminderSettings {
     int? vulnerableWeekday,
     bool clearVulnerableWeekday = false,
     int? vulnerableLeadMinutes,
+    bool? streakEnabled,
+    int? streakMinutes,
+    bool? comebackEnabled,
   }) => ReminderSettings(
     ritualStartEnabled: ritualStartEnabled ?? this.ritualStartEnabled,
     waterEnabled: waterEnabled ?? this.waterEnabled,
@@ -64,6 +79,9 @@ class ReminderSettings {
         ? null
         : (vulnerableWeekday ?? this.vulnerableWeekday),
     vulnerableLeadMinutes: vulnerableLeadMinutes ?? this.vulnerableLeadMinutes,
+    streakEnabled: streakEnabled ?? this.streakEnabled,
+    streakMinutes: streakMinutes ?? this.streakMinutes,
+    comebackEnabled: comebackEnabled ?? this.comebackEnabled,
   );
 
   Map<String, Object?> toJson() => {
@@ -76,6 +94,9 @@ class ReminderSettings {
     'screensOffMinutes': screensOffMinutes,
     'vulnerableWeekday': vulnerableWeekday,
     'vulnerableLeadMinutes': vulnerableLeadMinutes,
+    'streakEnabled': streakEnabled,
+    'streakMinutes': streakMinutes,
+    'comebackEnabled': comebackEnabled,
   };
 
   factory ReminderSettings.fromJson(Map<String, Object?> json) =>
@@ -89,6 +110,9 @@ class ReminderSettings {
         screensOffMinutes: (json['screensOffMinutes'] as int?) ?? 1290,
         vulnerableWeekday: json['vulnerableWeekday'] as int?,
         vulnerableLeadMinutes: (json['vulnerableLeadMinutes'] as int?) ?? 30,
+        streakEnabled: (json['streakEnabled'] as bool?) ?? true,
+        streakMinutes: (json['streakMinutes'] as int?) ?? 1200,
+        comebackEnabled: (json['comebackEnabled'] as bool?) ?? true,
       );
 }
 
@@ -119,4 +143,4 @@ class ScheduledReminder {
   bool get isDaily => weekday == null && date == null;
 }
 
-enum ReminderChannel { rituals, water, wellbeing }
+enum ReminderChannel { rituals, water, wellbeing, streak, engagement }

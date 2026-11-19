@@ -1,3 +1,4 @@
+import 'package:ritualhub/data/services/audio_service.dart';
 import 'package:ritualhub/data/services/biometric_service.dart';
 import 'package:ritualhub/data/services/image_picker_service.dart';
 import 'package:ritualhub/data/services/notification_service.dart';
@@ -26,6 +27,25 @@ class FakeNotificationService implements NotificationService {
     required String title,
     required String body,
   }) async => const Result.ok(null);
+
+  String? ongoingTitle;
+
+  @override
+  Future<Result<void>> showOngoing({
+    required String title,
+    required String body,
+    int? progress,
+    int? maxProgress,
+  }) async {
+    ongoingTitle = title;
+    return const Result.ok(null);
+  }
+
+  @override
+  Future<Result<void>> cancelOngoing() async {
+    ongoingTitle = null;
+    return const Result.ok(null);
+  }
 }
 
 class FakeBiometricService implements BiometricService {
@@ -47,4 +67,28 @@ class FakePhotoService implements PhotoService {
   @override
   Future<Result<String?>> pick({required bool fromCamera}) async =>
       Result.ok(path);
+}
+
+/// Registra as chamadas de áudio em memória.
+class FakeAudioService implements AudioService {
+  String? playing;
+  int bells = 0;
+
+  @override
+  Future<void> playAmbient(String name) async => playing = name;
+
+  @override
+  Future<void> pauseAmbient() async => playing = null;
+
+  @override
+  Future<void> resumeAmbient() async {}
+
+  @override
+  Future<void> stopAmbient() async => playing = null;
+
+  @override
+  Future<void> playBell() async => bells++;
+
+  @override
+  Future<void> dispose() async {}
 }

@@ -68,11 +68,13 @@ class PillBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(
-      context,
-    ).textTheme.labelMedium?.copyWith(color: foreground, fontWeight: FontWeight.w600);
+    final style = Theme.of(context).textTheme.labelMedium
+        ?.copyWith(color: foreground, fontWeight: FontWeight.w600);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: dense ? 8 : 12, vertical: dense ? 3 : 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: dense ? 8 : 12,
+        vertical: dense ? 3 : 5,
+      ),
       decoration: BoxDecoration(
         color: background,
         borderRadius: BorderRadius.circular(999),
@@ -156,7 +158,9 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = AppColors.avatarPalette;
-    final color = palette[user.id.codeUnits.fold<int>(0, (s, c) => s + c) % palette.length];
+    final color =
+        palette[user.id.codeUnits.fold<int>(0, (s, c) => s + c) %
+            palette.length];
     final path = user.avatarPath;
     return Container(
       width: size,
@@ -164,7 +168,9 @@ class UserAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color,
-        border: ring ? Border.all(color: AppColors.surfaceLowest, width: 2) : null,
+        border: ring
+            ? Border.all(color: AppColors.surfaceLowest, width: 2)
+            : null,
         image: path != null && File(path).existsSync()
             ? DecorationImage(image: FileImage(File(path)), fit: BoxFit.cover)
             : null,
@@ -223,7 +229,9 @@ class AvatarStack extends StatelessWidget {
                 height: size,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: dark ? AppColors.surfaceLowest : AppColors.primaryContainer,
+                  color: dark
+                      ? AppColors.surfaceLowest
+                      : AppColors.primaryContainer,
                   border: Border.all(color: AppColors.surfaceLowest, width: 2),
                 ),
                 alignment: Alignment.center,
@@ -315,7 +323,9 @@ class SectionHeader extends StatelessWidget {
               if (eyebrow != null)
                 Text(
                   eyebrow!.toUpperCase(),
-                  style: t.labelSmall?.copyWith(color: AppColors.onSurfaceVariant),
+                  style: t.labelSmall?.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
               Text(title, style: t.headlineMedium),
             ],
@@ -329,11 +339,7 @@ class SectionHeader extends StatelessWidget {
 
 /// Estado de erro com ação de tentar novamente.
 class ErrorIndicator extends StatelessWidget {
-  const ErrorIndicator({
-    super.key,
-    required this.title,
-    required this.onRetry,
-  });
+  const ErrorIndicator({super.key, required this.title, required this.onRetry});
 
   final String title;
   final VoidCallback onRetry;
@@ -418,14 +424,17 @@ class SereneTopBar extends StatelessWidget {
       children: [
         const SereneLogo(size: 32),
         const SizedBox(width: 10),
-        Text(
-          'Serene',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w700,
+        Expanded(
+          child: Text(
+            'Serene',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
-        const Spacer(),
         if (streak != null) ...[
           StreakPill(days: streak!),
           const SizedBox(width: 10),

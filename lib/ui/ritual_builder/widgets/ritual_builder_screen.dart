@@ -167,10 +167,16 @@ class _RitualBuilderScreenState extends State<RitualBuilderScreen> {
                 sliver: SliverToBoxAdapter(
                   child: Row(
                     children: [
-                      const Icon(Icons.reorder, color: AppColors.onSurfaceVariant),
+                      const Icon(
+                        Icons.reorder,
+                        color: AppColors.onSurfaceVariant,
+                      ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: Text('Passos Consecutivos', style: t.headlineMedium),
+                        child: Text(
+                          'Passos Consecutivos',
+                          style: t.headlineMedium,
+                        ),
                       ),
                       Text(
                         'ARRASTE PARA\nORDENAR',
@@ -223,7 +229,13 @@ class _RitualBuilderScreenState extends State<RitualBuilderScreen> {
                         children: [
                           const Icon(Icons.add_circle_outline),
                           const SizedBox(width: 10),
-                          Text('Adicionar Novo Bloco de Ação', style: t.titleSmall),
+                          Flexible(
+                            child: Text(
+                              'Adicionar Novo Bloco de Ação',
+                              style: t.titleSmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -362,10 +374,18 @@ class _RitualBuilderScreenState extends State<RitualBuilderScreen> {
               children: [
                 const Icon(Icons.timelapse, size: 20),
                 const SizedBox(width: 10),
-                Expanded(child: Text('Tempo Total Estimado', style: t.bodyMedium)),
+                Expanded(
+                  child: Text(
+                    'Tempo Total Estimado',
+                    style: t.bodyMedium,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 8),
                 PillBadge(label: '${vm.totalMinutes} min', dense: true),
                 const SizedBox(width: 8),
-                Text('• ${vm.steps.length} Ações', style: t.bodySmall),
+                Text('• ${vm.steps.length}', style: t.bodySmall),
               ],
             ),
           ),
@@ -410,25 +430,28 @@ class _RitualBuilderScreenState extends State<RitualBuilderScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               for (var d = 1; d <= 7; d++)
-                InkResponse(
-                  onTap: () => vm.toggleDay(d),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    width: 40,
-                    height: 40,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: vm.activeWeekdays.contains(d)
-                          ? AppColors.primary
-                          : AppColors.surfaceContainer,
-                    ),
-                    child: Text(
-                      Dates.weekdayLetter[d - 1],
-                      style: t.labelLarge?.copyWith(
+                Flexible(
+                  child: InkResponse(
+                    onTap: () => vm.toggleDay(d),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      width: 40,
+                      height: 40,
+                      margin: const EdgeInsets.symmetric(horizontal: 1),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
                         color: vm.activeWeekdays.contains(d)
-                            ? AppColors.onPrimary
-                            : AppColors.outline,
+                            ? AppColors.primary
+                            : AppColors.surfaceContainer,
+                      ),
+                      child: Text(
+                        Dates.weekdayLetter[d - 1],
+                        style: t.labelLarge?.copyWith(
+                          color: vm.activeWeekdays.contains(d)
+                              ? AppColors.onPrimary
+                              : AppColors.outline,
+                        ),
                       ),
                     ),
                   ),
@@ -501,10 +524,7 @@ class _RitualBuilderScreenState extends State<RitualBuilderScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Tribo & Desafios', style: t.headlineSmall),
-                    Text(
-                      'A força do compromisso coletivo',
-                      style: t.bodySmall,
-                    ),
+                    Text('A força do compromisso coletivo', style: t.bodySmall),
                   ],
                 ),
               ),

@@ -11,6 +11,12 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     final env = await FakeEnvironment.create();
+    await env.auth.register(
+      name: 'Lucas',
+      email: 'lucas@serene.com',
+      password: '123456',
+    );
+    await env.auth.logout();
     final vm = LoginViewModel(authRepository: env.auth);
     await tester.pumpWidget(MaterialApp(home: LoginScreen(viewModel: vm)));
     await tester.pumpAndSettle();

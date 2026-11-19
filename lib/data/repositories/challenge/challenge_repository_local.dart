@@ -285,10 +285,7 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
       });
 
   @override
-  Future<Result<CheckIn>> addComment(
-    String checkInId,
-    CheckInComment comment,
-  ) {
+  Future<Result<CheckIn>> addComment(String checkInId, CheckInComment comment) {
     if (comment.text.trim().isEmpty) {
       return Future.value(
         const Result.error(AppException('Escreva uma palavra de força.')),

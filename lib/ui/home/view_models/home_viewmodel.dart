@@ -38,7 +38,8 @@ class TodayRitual {
     return null;
   }
 
-  bool isStepDone(RitualStep s) => log?.completedStepIds.contains(s.id) ?? false;
+  bool isStepDone(RitualStep s) =>
+      log?.completedStepIds.contains(s.id) ?? false;
 }
 
 /// Resumo de um desafio para o carrossel "Desafios em Tribo".
@@ -185,7 +186,9 @@ class HomeViewModel extends ViewModel {
         TodayRitual(
           ritual: r,
           log: logs
-              .where((l) => l.ritualId == r.id && Dates.isSameDay(l.date, today))
+              .where(
+                (l) => l.ritualId == r.id && Dates.isSameDay(l.date, today),
+              )
               .firstOrNull,
         ),
     ];
@@ -197,7 +200,9 @@ class HomeViewModel extends ViewModel {
       for (final c in challengesR.value.where((c) => c.isActive(now))) {
         final ciR = await _challenges.getCheckIns(c.id);
         final todayCis = ciR is Ok<List<CheckIn>>
-            ? ciR.value.where((ci) => Dates.isSameDay(ci.createdAt, now)).toList()
+            ? ciR.value
+                  .where((ci) => Dates.isSameDay(ci.createdAt, now))
+                  .toList()
             : <CheckIn>[];
         summaries.add(
           ChallengeSummary(

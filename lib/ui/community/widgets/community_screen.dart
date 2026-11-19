@@ -387,7 +387,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
       const SizedBox(height: Dimens.spaceLg),
       Padding(
         padding: Dimens.screenPadding,
-        child: const SectionHeader(eyebrow: 'Inspirações', title: 'Modelos de desafio'),
+        child: const SectionHeader(
+          eyebrow: 'Inspirações',
+          title: 'Modelos de desafio',
+        ),
       ),
       const SizedBox(height: Dimens.spaceMd),
       for (final tpl in vm.templates)
@@ -416,7 +419,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       Text(tpl.description, style: t.bodySmall),
                       const SizedBox(height: 6),
                       PillBadge(
-                        label: '${tpl.durationDays} dias · ${tpl.category.label}',
+                        label:
+                            '${tpl.durationDays} dias · ${tpl.category.label}',
                         dense: true,
                         background: AppColors.surfaceContainer,
                       ),
@@ -509,14 +513,17 @@ class _ChallengeHero extends StatelessWidget {
         children: [
           Row(
             children: [
-              PillBadge(
-                label: finished
-                    ? 'ENCERRADO'
-                    : 'RESTAM ${c.daysLeft(now)} DIAS',
-                icon: Icons.timer_outlined,
-                background: Colors.white.withValues(alpha: 0.15),
-                foreground: light,
+              Flexible(
+                child: PillBadge(
+                  label: finished
+                      ? 'ENCERRADO'
+                      : 'RESTAM ${c.daysLeft(now)} DIAS',
+                  icon: Icons.timer_outlined,
+                  background: Colors.white.withValues(alpha: 0.15),
+                  foreground: light,
+                ),
               ),
+              const SizedBox(width: 8),
               const Spacer(),
               AvatarStack(users: c.members, size: 30, dark: true),
             ],
@@ -536,13 +543,15 @@ class _ChallengeHero extends StatelessWidget {
             ),
           ],
           const SizedBox(height: Dimens.spaceMd),
-          Row(
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: 8,
+            runSpacing: 2,
             children: [
               Text(
                 'Progresso do Grupo (Dia ${c.currentDay(now)}/${c.durationDays})',
                 style: t.labelMedium?.copyWith(color: light),
               ),
-              const Spacer(),
               Text(
                 '${(progress * 100).round()}% concluído',
                 style: t.labelMedium?.copyWith(
@@ -648,7 +657,10 @@ class _Wall extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.volunteer_activism_outlined, color: AppColors.secondary),
+              const Icon(
+                Icons.volunteer_activism_outlined,
+                color: AppColors.secondary,
+              ),
               const SizedBox(width: 8),
               Text('Mural de Incentivo', style: t.titleMedium),
             ],
@@ -669,7 +681,9 @@ class _Wall extends StatelessWidget {
                         Text(e.message, style: t.bodySmall),
                         Text(
                           '${Dates.relative(e.createdAt, vm.now)} · para ${e.to.firstName}',
-                          style: t.labelSmall?.copyWith(color: AppColors.outline),
+                          style: t.labelSmall?.copyWith(
+                            color: AppColors.outline,
+                          ),
                         ),
                       ],
                     ),

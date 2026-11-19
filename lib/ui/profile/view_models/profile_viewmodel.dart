@@ -48,7 +48,9 @@ class ProfileViewModel extends ViewModel {
 
   Future<Result<void>> _saveGoals(HealthGoals g) async {
     final r = await _health.updateGoals(g);
-    return r is Error<HealthGoals> ? Result.error(r.error) : const Result.ok(null);
+    return r is Error<HealthGoals>
+        ? Result.error(r.error)
+        : const Result.ok(null);
   }
 
   Future<Result<void>> _rename(String name) async {

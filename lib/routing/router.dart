@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
 import '../ui/auth/view_models/login_viewmodel.dart';
+import '../ui/auth/view_models/register_viewmodel.dart';
 import '../ui/auth/widgets/login_screen.dart';
+import '../ui/auth/widgets/register_screen.dart';
 import '../ui/community/view_models/community_viewmodel.dart';
 import '../ui/community/widgets/community_screen.dart';
 import '../ui/core/ui/scaffold_with_nav_bar.dart';
@@ -38,7 +40,9 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
   refreshListenable: authRepository,
   redirect: (context, state) async {
     final loggedIn = await authRepository.isAuthenticated;
-    final loggingIn = state.matchedLocation == Routes.login;
+    final loggingIn =
+        state.matchedLocation == Routes.login ||
+        state.matchedLocation == Routes.register;
     if (!loggedIn) return loggingIn ? null : Routes.login;
     if (loggingIn) return Routes.home;
     return null;
@@ -49,6 +53,13 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
       builder: (context, state) => ViewModelBuilder(
         create: (c) => LoginViewModel(authRepository: c.read()),
         builder: (_, vm) => LoginScreen(viewModel: vm),
+      ),
+    ),
+    GoRoute(
+      path: Routes.register,
+      builder: (context, state) => ViewModelBuilder(
+        create: (c) => RegisterViewModel(authRepository: c.read()),
+        builder: (_, vm) => RegisterScreen(viewModel: vm),
       ),
     ),
     StatefulShellRoute.indexedStack(
@@ -158,6 +169,9 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
           authRepository: c.read(),
           completeStep: c.read(),
           evaluateAchievements: c.read(),
+          notifications: c.read(),
+          audio: c.read(),
+          planReminders: c.read(),
         ),
         builder: (_, vm) => RitualPlayerScreen(viewModel: vm),
       ),

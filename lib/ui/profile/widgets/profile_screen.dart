@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../routing/routes.dart';
 import '../../../utils/dates.dart';
+import '../../../utils/result.dart';
 import '../../core/themes/colors.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/ui/common.dart';
@@ -15,26 +16,20 @@ class ProfileScreen extends StatelessWidget {
   final ProfileViewModel viewModel;
 
   Future<void> _rename(BuildContext context) async {
-    final controller = TextEditingController(text: viewModel.user?.name);
     final name = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Seu nome'),
-        content: TextField(controller: controller, autofocus: true),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Salvar'),
-          ),
-        ],
-      ),
+      builder: (_) => _RenameDialog(initial: viewModel.user?.name ?? ''),
     );
-    controller.dispose();
-    if (name != null) await viewModel.rename.execute(name);
+    if (name == null) return;
+    await viewModel.rename.execute(name);
+    final r = viewModel.rename.result;
+    if (!context.mounted) return;
+    if (r is Error<void>) {
+      showSnack(context, errorMessage(r.error));
+    } else {
+      showSnack(context, 'Nome atualizado.');
+    }
+    viewModel.rename.clearResult();
   }
 
   @override
@@ -238,4 +233,56 @@ class _GoalSlider extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Diálogo de edição do nome. O [TextEditingController] vive no State do
+/// próprio diálogo, então só é descartado depois da animação de fechamento.
+class _RenameDialog extends StatefulWidget {
+  const _RenameDialog({required this.initial});
+
+  final String initial;
+
+  @override
+  State<_RenameDialog> createState() => _RenameDialogState();
+}
+
+class _RenameDialogState extends State<_RenameDialog> {
+  late final _controller = TextEditingController(text: widget.initial);
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    if (!_formKey.currentState!.validate()) return;
+    Navigator.pop(context, _controller.text.trim());
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: const Text('Seu nome'),
+    content: Form(
+      key: _formKey,
+      child: TextFormField(
+        controller: _controller,
+        autofocus: true,
+        maxLength: 40,
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.done,
+        onFieldSubmitted: (_) => _save(),
+        validator: (v) =>
+            (v == null || v.trim().length < 2) ? 'Mínimo de 2 letras' : null,
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('Cancelar'),
+      ),
+      TextButton(onPressed: _save, child: const Text('Salvar')),
+    ],
+  );
 }

@@ -35,6 +35,7 @@ class FakeEnvironment {
   final notifications = FakeNotificationService();
   final biometrics = FakeBiometricService();
   final photos = FakePhotoService();
+  final audio = FakeAudioService();
 
   late final auth = AuthRepositoryLocal(
     storage: storage,
@@ -73,10 +74,10 @@ class FakeEnvironment {
     challengeRepository: challenges,
   );
 
-  /// Faz login com o usuário local de testes.
-  Future<void> signIn() => auth.login(
+  /// Cria (cadastro) e autentica o usuário local de testes.
+  Future<void> signIn() => auth.register(
+    name: 'Lucas',
     email: 'lucas@serene.com',
     password: '123456',
-    rememberMe: true,
   );
 }

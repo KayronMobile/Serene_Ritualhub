@@ -73,7 +73,11 @@ class LeaderboardSection extends StatelessWidget {
         for (var i = 0; i < entries.length; i++)
           Padding(
             padding: const EdgeInsets.only(bottom: Dimens.spaceSm),
-            child: _Row(position: i + 1, entry: entries[i], isMe: entries[i].member.id == myId),
+            child: _Row(
+              position: i + 1,
+              entry: entries[i],
+              isMe: entries[i].member.id == myId,
+            ),
           ),
       ],
     );
@@ -125,7 +129,11 @@ class _Row extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
-                    child: const Icon(Icons.check, size: 9, color: Colors.white),
+                    child: const Icon(
+                      Icons.check,
+                      size: 9,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
             ],
@@ -146,7 +154,9 @@ class _Row extends StatelessWidget {
                     ),
                     if (isMe) ...[
                       const SizedBox(width: 6),
-                      const PillBadge(label: 'Você', dense: true),
+                      const Flexible(
+                        child: PillBadge(label: 'Você', dense: true),
+                      ),
                     ],
                   ],
                 ),
@@ -158,26 +168,41 @@ class _Row extends StatelessWidget {
                       color: AppColors.terracotta,
                     ),
                     const SizedBox(width: 2),
-                    Text(
-                      '${entry.currentStreak} dias seguidos',
-                      style: t.bodySmall,
+                    Flexible(
+                      child: Text(
+                        '${entry.currentStreak} dias seguidos',
+                        style: t.bodySmall,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                entry.elapsedDays == 0
-                    ? '—'
-                    : '${(entry.consistency * 100).round()}%',
-                style: t.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              Text(entry.mood, style: t.bodySmall),
-            ],
+          const SizedBox(width: 8),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 96),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  entry.elapsedDays == 0
+                      ? '—'
+                      : '${(entry.consistency * 100).round()}%',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  entry.mood,
+                  style: t.bodySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ],
       ),

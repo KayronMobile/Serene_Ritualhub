@@ -17,6 +17,7 @@ void main() {
       authRepository: env.auth,
       completeStep: env.completeStep,
       evaluateAchievements: env.evaluateAchievements,
+      audio: env.audio,
       clock: env.clock,
       tick: const Duration(hours: 1), // o timer não interfere no teste
     );
@@ -51,6 +52,21 @@ void main() {
     expect(vm.finished, isTrue);
     expect(vm.lastOutcome!.ritualCompleted, isTrue);
     expect(vm.lastOutcome!.sharedWithTribe, isTrue);
+  });
+
+  test('som ambiente acompanha o passo, a pausa e o botão de som', () async {
+    expect(env.audio.playing, 'Chuva Suave na Floresta');
+    vm.togglePause();
+    expect(env.audio.playing, isNull);
+    vm.togglePause();
+    expect(env.audio.playing, 'Chuva Suave na Floresta');
+    vm.toggleSound();
+    expect(env.audio.playing, isNull);
+    vm.toggleSound();
+    await vm.complete.execute(); // próximo passo não tem som
+    expect(env.audio.playing, isNull);
+    await vm.complete.execute(); // fim do ritual toca o sino
+    expect(env.audio.bells, 1);
   });
 
   test('pular avança sem marcar o passo como concluído', () async {

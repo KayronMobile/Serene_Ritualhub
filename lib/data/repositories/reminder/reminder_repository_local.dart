@@ -49,7 +49,8 @@ class ReminderRepositoryLocal extends ReminderRepository {
   }
 
   @override
-  Future<Result<bool>> requestPermission() => _notifications.requestPermission();
+  Future<Result<bool>> requestPermission() =>
+      _notifications.requestPermission();
 
   @override
   Future<Result<void>> applySchedule(List<ScheduledReminder> reminders) async {

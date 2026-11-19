@@ -79,7 +79,10 @@ class _CreateChallengeSheetState extends State<CreateChallengeSheet> {
         if (_invited.contains(f.id)) f,
     ];
     if (invited.isEmpty) {
-      showSnack(context, 'Convide ao menos um amigo — desafios são coletivos 🤝');
+      showSnack(
+        context,
+        'Convide ao menos um amigo — desafios são coletivos 🤝',
+      );
       return;
     }
     vm.createChallenge.execute((
@@ -187,7 +190,8 @@ class _CreateChallengeSheetState extends State<CreateChallengeSheet> {
                 contentPadding: EdgeInsets.zero,
                 value: _invited.contains(f.id),
                 onChanged: (v) => setState(
-                  () => (v ?? false) ? _invited.add(f.id) : _invited.remove(f.id),
+                  () =>
+                      (v ?? false) ? _invited.add(f.id) : _invited.remove(f.id),
                 ),
                 secondary: UserAvatar(user: f, size: 36),
                 title: Text(f.name),

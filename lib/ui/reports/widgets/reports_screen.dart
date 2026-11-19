@@ -103,7 +103,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                       color: AppColors.onSurfaceVariant,
                                     ),
                                   ),
-                                  Text('Ritmo & Conquistas', style: t.displaySmall),
+                                  Text(
+                                    'Ritmo & Conquistas',
+                                    style: t.displaySmall,
+                                  ),
                                 ],
                               ),
                             ),
@@ -136,7 +139,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         const SizedBox(height: Dimens.spaceXl),
                         SectionHeader(
                           title: 'Rastreadores Holísticos',
-                          trailing: Text('Médias da Semana', style: t.bodySmall),
+                          trailing: Text(
+                            'Médias da Semana',
+                            style: t.bodySmall,
+                          ),
                         ),
                         const SizedBox(height: Dimens.spaceMd),
                         _HydrationCard(report: report),
@@ -215,13 +221,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ),
                         ),
                         const SizedBox(height: Dimens.spaceXl),
-                        const Icon(Icons.eco_outlined, color: AppColors.primaryContainer),
+                        const Icon(
+                          Icons.eco_outlined,
+                          color: AppColors.primaryContainer,
+                        ),
                         const SizedBox(height: 6),
                         Text(
                           '“Pequenos gestos repetidos com gentileza '
                           'transformam destinos.”',
                           textAlign: TextAlign.center,
-                          style: t.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+                          style: t.bodySmall?.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ],
                     ),
@@ -259,7 +270,9 @@ class _WeekToggle extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
           decoration: BoxDecoration(
-            color: offset == value ? AppColors.surfaceLowest : Colors.transparent,
+            color: offset == value
+                ? AppColors.surfaceLowest
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(999),
             boxShadow: offset == value ? Dimens.cardShadow : null,
           ),
@@ -314,7 +327,9 @@ class _ConsistencyCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Consistência Geral', style: t.labelMedium),
-                    Row(
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runSpacing: 4,
                       children: [
                         Text(
                           '$pct%',
@@ -359,12 +374,19 @@ class _ConsistencyCard extends StatelessWidget {
             highlightWeekday: report.vulnerability?.weekday,
           ),
           const SizedBox(height: Dimens.spaceMd),
-          Row(
+          Wrap(
+            spacing: Dimens.spaceMd,
+            runSpacing: 6,
             children: [
-              const _Legend(color: AppColors.primary, label: 'Rituais Concluídos'),
-              const SizedBox(width: Dimens.spaceMd),
+              const _Legend(
+                color: AppColors.primary,
+                label: 'Rituais Concluídos',
+              ),
               if (report.vulnerability != null)
-                const _Legend(color: AppColors.terracotta, label: 'Vulnerabilidade'),
+                const _Legend(
+                  color: AppColors.terracotta,
+                  label: 'Vulnerabilidade',
+                ),
             ],
           ),
         ],
@@ -389,7 +411,13 @@ class _Legend extends StatelessWidget {
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
       ),
       const SizedBox(width: 6),
-      Text(label, style: Theme.of(context).textTheme.bodySmall),
+      Flexible(
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
     ],
   );
 }
@@ -440,7 +468,8 @@ class _PatternCard extends StatelessWidget {
                     style: t.titleMedium?.copyWith(fontWeight: FontWeight.w500),
                     children: [
                       TextSpan(
-                        text: '$day é o seu dia de maior vulnerabilidade para o ',
+                        text:
+                            '$day é o seu dia de maior vulnerabilidade para o ',
                       ),
                       TextSpan(
                         text: insight.ritualName,
@@ -499,14 +528,18 @@ class _HarmonyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
     return Container(
-      height: 130,
+      constraints: const BoxConstraints(minHeight: 130),
       padding: const EdgeInsets.all(Dimens.spaceLg),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radiusLg),
         gradient: const LinearGradient(
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,
-          colors: [AppColors.primary, AppColors.sage, AppColors.primaryFixedDim],
+          colors: [
+            AppColors.primary,
+            AppColors.sage,
+            AppColors.primaryFixedDim,
+          ],
         ),
       ),
       child: Stack(
@@ -517,7 +550,7 @@ class _HarmonyCard extends StatelessWidget {
             child: Icon(Icons.spa, size: 110, color: Color(0x22FFFFFF)),
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -562,34 +595,57 @@ class _HydrationCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Média de Hidratação', style: t.titleSmall),
+                    Text(
+                      'Média de Hidratação',
+                      style: t.titleSmall,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     Text(
                       'Meta diária: ${report.waterGoalMl} ml',
                       style: t.bodySmall,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      text: '${report.averageWaterMl}',
-                      style: t.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
-                      children: [TextSpan(text: ' ml/dia', style: t.bodySmall)],
-                    ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          text: '${report.averageWaterMl}',
+                          style: t.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                          children: [
+                            TextSpan(text: ' ml/dia', style: t.bodySmall),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        '${(report.waterGoalRatio * 100).round()}% da meta',
+                        style: t.labelMedium?.copyWith(
+                          color: AppColors.tertiaryContainer,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${(report.waterGoalRatio * 100).round()}% da meta',
-                    style: t.labelMedium?.copyWith(color: AppColors.tertiaryContainer),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
           const SizedBox(height: Dimens.spaceMd),
-          HydrationLineChart(values: report.waterByDay, goal: report.waterGoalMl),
+          HydrationLineChart(
+            values: report.waterByDay,
+            goal: report.waterGoalMl,
+          ),
         ],
       ),
     );
@@ -630,23 +686,42 @@ class _MiniStat extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: t.titleSmall),
-                Text(subtitle, style: t.bodySmall),
+                Text(
+                  title,
+                  style: t.titleSmall,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  subtitle,
+                  style: t.bodySmall,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text.rich(
-                TextSpan(
-                  text: value,
-                  style: t.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-                  children: [TextSpan(text: unit, style: t.bodySmall)],
-                ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      text: value,
+                      style: t.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                      children: [TextSpan(text: unit, style: t.bodySmall)],
+                    ),
+                  ),
+                  Text(badge, style: t.labelSmall?.copyWith(color: badgeColor)),
+                ],
               ),
-              Text(badge, style: t.labelSmall?.copyWith(color: badgeColor)),
-            ],
+            ),
           ),
         ],
       ),
@@ -732,9 +807,14 @@ class _AchievementCard extends StatelessWidget {
                   color: AppColors.primaryContainer,
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  'Conquistado em ${Dates.dayMonth(a.unlockedAt!)}',
-                  style: t.labelMedium?.copyWith(color: AppColors.primaryContainer),
+                Flexible(
+                  child: Text(
+                    'Conquistado em ${Dates.dayMonth(a.unlockedAt!)}',
+                    overflow: TextOverflow.ellipsis,
+                    style: t.labelMedium?.copyWith(
+                      color: AppColors.primaryContainer,
+                    ),
+                  ),
                 ),
               ],
             )
@@ -744,13 +824,15 @@ class _AchievementCard extends StatelessWidget {
               color: group ? AppColors.primary : AppColors.secondary,
             ),
             const SizedBox(height: 6),
-            Row(
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 8,
+              runSpacing: 2,
               children: [
                 Text(
                   group ? 'Ritual em círculo' : 'Atenção plena',
                   style: t.bodySmall,
                 ),
-                const Spacer(),
                 Text(
                   'Faltam ${a.remaining} ${def.unit.toLowerCase()}',
                   style: t.bodySmall,

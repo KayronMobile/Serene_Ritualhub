@@ -23,7 +23,7 @@ class AdherenceBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
     return SizedBox(
-      height: height + 40,
+      height: height + 60,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -36,10 +36,16 @@ class AdherenceBarChart extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (d.date.weekday == highlightWeekday && d.adherence != null)
-                      Text(
-                        '${(d.adherence! * 100).round()}%',
-                        style: t.labelSmall?.copyWith(color: AppColors.terracotta),
+                    if (d.date.weekday == highlightWeekday &&
+                        d.adherence != null)
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${(d.adherence! * 100).round()}%',
+                          style: t.labelSmall?.copyWith(
+                            color: AppColors.terracotta,
+                          ),
+                        ),
                       ),
                     const SizedBox(height: 4),
                     TweenAnimationBuilder<double>(
@@ -47,8 +53,12 @@ class AdherenceBarChart extends StatelessWidget {
                       duration: const Duration(milliseconds: 700),
                       curve: Curves.easeOutCubic,
                       builder: (context, v, _) => Container(
-                        width: 30,
-                        height: max(8.0, height * (d.adherence == null ? 0.08 : v)),
+                        constraints: const BoxConstraints(maxWidth: 30),
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        height: max(
+                          8.0,
+                          height * (d.adherence == null ? 0.08 : v),
+                        ),
                         decoration: BoxDecoration(
                           color: d.adherence == null
                               ? AppColors.surfaceHighest
@@ -60,10 +70,15 @@ class AdherenceBarChart extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      Dates.weekdayShort[d.date.weekday - 1],
-                      style: t.labelMedium?.copyWith(
-                        color: d.isFuture ? AppColors.outline : AppColors.onSurface,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        Dates.weekdayShort[d.date.weekday - 1],
+                        style: t.labelMedium?.copyWith(
+                          color: d.isFuture
+                              ? AppColors.outline
+                              : AppColors.onSurface,
+                        ),
                       ),
                     ),
                   ],
@@ -104,7 +119,10 @@ class HydrationLineChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             for (final label in const ['Seg', 'Qua', 'Sex', 'Dom'])
-              Text(label, style: t.labelSmall?.copyWith(color: AppColors.outline)),
+              Text(
+                label,
+                style: t.labelSmall?.copyWith(color: AppColors.outline),
+              ),
           ],
         ),
       ],
@@ -131,7 +149,11 @@ class _LinePainter extends CustomPainter {
       ..strokeWidth = 1;
     final gy = y(goal);
     for (var x = 0.0; x < size.width; x += 8) {
-      canvas.drawLine(Offset(x, gy), Offset(min(x + 4, size.width), gy), goalPaint);
+      canvas.drawLine(
+        Offset(x, gy),
+        Offset(min(x + 4, size.width), gy),
+        goalPaint,
+      );
     }
 
     final points = [

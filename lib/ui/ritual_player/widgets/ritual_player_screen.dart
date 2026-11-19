@@ -328,7 +328,9 @@ class _Player extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        vm.soundOn ? Icons.graphic_eq : Icons.music_off_outlined,
+                        vm.soundOn
+                            ? Icons.graphic_eq
+                            : Icons.music_off_outlined,
                         color: AppColors.secondary,
                       ),
                       const SizedBox(width: 12),
@@ -407,7 +409,9 @@ class _Player extends StatelessWidget {
                 ),
                 onPressed: step.ambientSound == null ? null : vm.toggleSound,
                 icon: Icon(
-                  vm.soundOn ? Icons.music_off_outlined : Icons.music_note_outlined,
+                  vm.soundOn
+                      ? Icons.music_off_outlined
+                      : Icons.music_note_outlined,
                 ),
                 label: Text(vm.soundOn ? 'Pausar som' : 'Tocar som'),
               ),
@@ -492,7 +496,10 @@ class _InfoCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(eyebrow, style: t.labelSmall?.copyWith(color: eyebrowColor)),
+                Text(
+                  eyebrow,
+                  style: t.labelSmall?.copyWith(color: eyebrowColor),
+                ),
                 Text(
                   text,
                   maxLines: 2,

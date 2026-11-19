@@ -12,8 +12,10 @@ import 'main.dart';
 void main() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((r) {
-    debugPrint('[${r.level.name}] ${r.loggerName}: ${r.message}'
-        '${r.error != null ? ' — ${r.error}' : ''}');
+    debugPrint(
+      '[${r.level.name}] ${r.loggerName}: ${r.message}'
+      '${r.error != null ? ' — ${r.error}' : ''}',
+    );
   });
 
   runApp(MultiProvider(providers: providersLocal, child: const MainApp()));

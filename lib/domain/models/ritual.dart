@@ -266,8 +266,9 @@ class RitualLog {
   /// Sessão concluída sem pular nenhuma etapa.
   bool get isFocused => isComplete && skippedStepIds.isEmpty;
 
-  double get adherence =>
-      totalSteps == 0 ? 0 : (completedStepIds.length / totalSteps).clamp(0.0, 1.0);
+  double get adherence => totalSteps == 0
+      ? 0
+      : (completedStepIds.length / totalSteps).clamp(0.0, 1.0);
 
   RitualLog copyWith({
     Set<String>? completedStepIds,

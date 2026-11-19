@@ -64,7 +64,7 @@ class RemindersScreen extends StatelessWidget {
               _Section(
                 icon: Icons.wb_sunny_outlined,
                 title: 'Início dos rituais',
-                subtitle: 'Aviso antes do ritual matinal e dos demais',
+                subtitle: '5 min antes e no horário de cada ritual',
                 value: s.ritualStartEnabled,
                 onChanged: (v) => save(s.copyWith(ritualStartEnabled: v)),
                 children: [
@@ -75,7 +75,7 @@ class RemindersScreen extends StatelessWidget {
                       title: Text(r.name, style: t.titleSmall),
                       subtitle: Text(
                         '${Dates.hhmm(r.startMinutes)} · '
-                        '${r.reminderLeadMinutes} min antes · '
+                        '5 min antes e na hora · '
                         '${r.activeWeekdays.length} dias/semana',
                         style: t.bodySmall,
                       ),
@@ -85,6 +85,34 @@ class RemindersScreen extends StatelessWidget {
                           : null,
                     ),
                 ],
+              ),
+              const SizedBox(height: Dimens.spaceMd),
+              _Section(
+                icon: Icons.local_fire_department_outlined,
+                iconColor: AppColors.secondary,
+                title: 'Sequência de dias',
+                subtitle: 'Um resumo por dia da sua sequência',
+                value: s.streakEnabled,
+                onChanged: (v) => save(s.copyWith(streakEnabled: v)),
+                children: [
+                  _TimeRow(
+                    label: 'Horário',
+                    minutes: s.streakMinutes,
+                    onTap: () async {
+                      final m = await _pickTime(context, s.streakMinutes);
+                      if (m != null) save(s.copyWith(streakMinutes: m));
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: Dimens.spaceMd),
+              _Section(
+                icon: Icons.favorite_border,
+                title: 'Incentivos para voltar',
+                subtitle: 'Se você ficar alguns dias sem abrir o app',
+                value: s.comebackEnabled,
+                onChanged: (v) => save(s.copyWith(comebackEnabled: v)),
+                children: const [],
               ),
               const SizedBox(height: Dimens.spaceMd),
               _Section(

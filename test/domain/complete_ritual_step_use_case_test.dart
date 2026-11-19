@@ -15,7 +15,8 @@ void main() {
   setUp(() async {
     env = await FakeEnvironment.create();
     await env.signIn();
-    morning = (await env.rituals.getRitual('ritual_morning') as Ok<Ritual>).value;
+    morning =
+        (await env.rituals.getRitual('ritual_morning') as Ok<Ritual>).value;
   });
 
   Future<DailyHealthLog> todayLog() async =>
@@ -23,14 +24,12 @@ void main() {
 
   Future<StepOutcome> complete(RitualStep step, {int seconds = 60}) async =>
       (await env.completeStep.execute(
-                ritual: morning,
-                step: step,
-                now: env.now,
-                author: env.auth.currentUser!,
-                elapsedSeconds: seconds,
-              )
-              as Ok<StepOutcome>)
-          .value;
+        ritual: morning,
+        step: step,
+        now: env.now,
+        author: env.auth.currentUser!,
+        elapsedSeconds: seconds,
+      ) as Ok<StepOutcome>).value;
 
   test('passo de movimento alimenta o rastreador de atividade', () async {
     final before = (await todayLog()).activityMinutes;
@@ -45,25 +44,27 @@ void main() {
     expect((await todayLog()).waterMl, before);
   });
 
-  test('concluir o ritual faz check-in automático no desafio vinculado', () async {
-    await complete(morning.steps[1], seconds: 420);
-    final outcome = await complete(morning.steps[2], seconds: 600);
+  test(
+    'concluir o ritual faz check-in automático no desafio vinculado',
+    () async {
+      await complete(morning.steps[1], seconds: 420);
+      final outcome = await complete(morning.steps[2], seconds: 600);
 
-    expect(outcome.ritualCompleted, isTrue);
-    expect(outcome.sharedWithTribe, isTrue);
-    expect(outcome.log.completedAt, isNotNull);
+      expect(outcome.ritualCompleted, isTrue);
+      expect(outcome.sharedWithTribe, isTrue);
+      expect(outcome.log.completedAt, isNotNull);
 
-    final checkIns =
-        (await env.challenges.getCheckIns(morning.linkedChallengeId!)
-                as Ok<List<CheckIn>>)
-            .value;
-    expect(
-      checkIns.where(
-        (c) => c.author.id == 'me' && Dates.isSameDay(c.createdAt, env.now),
-      ),
-      hasLength(1),
-    );
-  });
+      final checkIns = (await env.challenges.getCheckIns(
+        morning.linkedChallengeId!,
+      ) as Ok<List<CheckIn>>).value;
+      expect(
+        checkIns.where(
+          (c) => c.author.id == 'me' && Dates.isSameDay(c.createdAt, env.now),
+        ),
+        hasLength(1),
+      );
+    },
+  );
 
   test('pular um passo não conta como concluído', () async {
     final r = await env.completeStep.execute(

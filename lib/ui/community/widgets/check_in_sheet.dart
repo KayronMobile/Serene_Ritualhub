@@ -162,7 +162,9 @@ class _CheckInSheetState extends State<CheckInSheet> {
             ListenableBuilder(
               listenable: vm.createCheckIn,
               builder: (context, _) => FilledButton.icon(
-                style: FilledButton.styleFrom(backgroundColor: AppColors.primary),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                ),
                 onPressed: vm.createCheckIn.running
                     ? null
                     : () => vm.createCheckIn.execute((

@@ -110,10 +110,7 @@ void main() {
       expect(anaEntry.currentStreak, 1);
       expect(anaEntry.checkedInToday, isFalse);
 
-      expect(
-        ConsistencyCalculator.groupRate(board),
-        closeTo(0.75, 0.001),
-      );
+      expect(ConsistencyCalculator.groupRate(board), closeTo(0.75, 0.001));
     });
   });
 }

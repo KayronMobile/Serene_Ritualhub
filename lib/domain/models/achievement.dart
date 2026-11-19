@@ -60,10 +60,8 @@ class Achievement {
       ? 0
       : (progress / definition.target).clamp(0.0, 1.0);
 
-  int get remaining => (definition.target - progress).clamp(
-    0,
-    definition.target,
-  );
+  int get remaining =>
+      (definition.target - progress).clamp(0, definition.target);
 }
 
 /// Persistência do desbloqueio.

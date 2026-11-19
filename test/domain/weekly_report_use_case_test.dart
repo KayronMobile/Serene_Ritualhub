@@ -68,20 +68,23 @@ void main() {
     expect(report.vulnerability!.isNight, isTrue);
   });
 
-  test('semana atual: dias futuros sem aderência e média dos dias passados', () async {
-    final r = await env.weeklyReport.build(weekStart: env.now, now: env.now);
-    final report = (r as Ok<WeeklyReport>).value;
+  test(
+    'semana atual: dias futuros sem aderência e média dos dias passados',
+    () async {
+      final r = await env.weeklyReport.build(weekStart: env.now, now: env.now);
+      final report = (r as Ok<WeeklyReport>).value;
 
-    expect(report.days, hasLength(7));
-    expect(report.weekStart.weekday, DateTime.monday);
-    // Seg e Ter concluídos; Qua (hoje) em aberto; Qui..Dom no futuro.
-    expect(report.days[0].adherence, 1);
-    expect(report.days[1].adherence, 1);
-    expect(report.days[2].adherence, 0);
-    expect(report.days.skip(3).every((d) => d.isFuture), isTrue);
-    expect(report.consistency, closeTo(2 / 3, 0.001));
-    expect(report.guidedMinutes, 30); // 2 × 900s
-  });
+      expect(report.days, hasLength(7));
+      expect(report.weekStart.weekday, DateTime.monday);
+      // Seg e Ter concluídos; Qua (hoje) em aberto; Qui..Dom no futuro.
+      expect(report.days[0].adherence, 1);
+      expect(report.days[1].adherence, 1);
+      expect(report.days[2].adherence, 0);
+      expect(report.days.skip(3).every((d) => d.isFuture), isTrue);
+      expect(report.consistency, closeTo(2 / 3, 0.001));
+      expect(report.guidedMinutes, 30); // 2 × 900s
+    },
+  );
 
   test('semana anterior inclui a sexta-feira com 0%', () async {
     final lastWeek = Dates.addDays(env.now, -7);

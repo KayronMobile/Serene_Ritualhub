@@ -13,6 +13,16 @@ abstract class NotificationService {
   Future<Result<bool>> requestPermission();
   Future<Result<void>> replaceAll(List<ScheduledReminder> reminders);
   Future<Result<void>> showNow({required String title, required String body});
+
+  /// Notificação fixa (não removível) enquanto um ritual está em andamento.
+  Future<Result<void>> showOngoing({
+    required String title,
+    required String body,
+    int? progress,
+    int? maxProgress,
+  });
+
+  Future<Result<void>> cancelOngoing();
 }
 
 /// Implementação com `flutter_local_notifications` (API 20+: parâmetros
@@ -45,7 +55,19 @@ class LocalNotificationService implements NotificationService {
       'Bem-estar',
       'Desligar telas e desaceleração noturna',
     ),
+    ReminderChannel.streak: (
+      'streak',
+      'Sequência',
+      'Resumo diário da sua sequência de dias',
+    ),
+    ReminderChannel.engagement: (
+      'engagement',
+      'Incentivos',
+      'Convites para voltar aos seus rituais',
+    ),
   };
+
+  static const _ongoingId = 900;
 
   @override
   Future<Result<void>> initialize() async {
@@ -141,7 +163,8 @@ class LocalNotificationService implements NotificationService {
   Future<Result<void>> replaceAll(List<ScheduledReminder> reminders) async {
     try {
       await initialize();
-      await _plugin.cancelAll();
+      // Só os pendentes: preserva a notificação fixa do ritual em andamento.
+      await _plugin.cancelAllPendingNotifications();
       final now = DateTime.now();
       for (final r in reminders) {
         final when = _nextInstance(r, now);
@@ -183,6 +206,55 @@ class LocalNotificationService implements NotificationService {
         body: body,
         notificationDetails: _details(ReminderChannel.wellbeing),
       );
+      return const Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    }
+  }
+
+  @override
+  Future<Result<void>> showOngoing({
+    required String title,
+    required String body,
+    int? progress,
+    int? maxProgress,
+  }) async {
+    try {
+      await initialize();
+      final hasProgress = progress != null && maxProgress != null;
+      await _plugin.show(
+        id: _ongoingId,
+        title: title,
+        body: body,
+        notificationDetails: NotificationDetails(
+          android: AndroidNotificationDetails(
+            'active_ritual',
+            'Ritual em andamento',
+            channelDescription: 'Mostra o ritual ativo e o passo atual',
+            importance: Importance.low,
+            priority: Priority.low,
+            ongoing: true,
+            autoCancel: false,
+            onlyAlertOnce: true,
+            showWhen: false,
+            category: AndroidNotificationCategory.progress,
+            showProgress: hasProgress,
+            progress: progress ?? 0,
+            maxProgress: maxProgress ?? 0,
+          ),
+          iOS: const DarwinNotificationDetails(presentSound: false),
+        ),
+      );
+      return const Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    }
+  }
+
+  @override
+  Future<Result<void>> cancelOngoing() async {
+    try {
+      await _plugin.cancel(id: _ongoingId);
       return const Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);

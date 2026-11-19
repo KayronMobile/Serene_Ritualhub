@@ -1,3 +1,4 @@
+import '../../../data/services/audio_service.dart';
 import '../../../data/repositories/challenge/challenge_repository.dart';
 import '../../../data/repositories/ritual/ritual_repository.dart';
 import '../../../domain/models/challenge.dart';
@@ -95,7 +96,8 @@ class RitualBuilderViewModel extends ViewModel {
       type: StepType.custom,
       durationSeconds: 180,
       description: '30–60s de água fria no final',
-      instruction: 'Respire devagar e solte o ar pela boca enquanto a água cai.',
+      instruction:
+          'Respire devagar e solte o ar pela boca enquanto a água cai.',
     ),
     RitualStep(
       id: 'sug_gratitude',
@@ -124,13 +126,7 @@ class RitualBuilderViewModel extends ViewModel {
     ),
   ];
 
-  static const ambientSounds = [
-    'Chuva Suave na Floresta',
-    'Ondas do Mar',
-    'Lareira ao Longe',
-    'Pássaros ao Amanhecer',
-    'Ruído Branco',
-  ];
+  static List<String> get ambientSounds => AmbientSounds.names;
 
   Future<Result<void>> _load() async {
     final cr = await _challenges.getChallenges();

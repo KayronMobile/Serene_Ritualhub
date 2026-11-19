@@ -79,9 +79,7 @@ class WeeklyReportUseCase {
     final sleepStd = sleeps.length < 2
         ? 0
         : sqrt(
-            sleeps
-                    .map((s) => pow(s - avgSleep, 2))
-                    .reduce((a, b) => a + b) /
+            sleeps.map((s) => pow(s - avgSleep, 2)).reduce((a, b) => a + b) /
                 sleeps.length,
           ).round();
 
@@ -124,7 +122,8 @@ class WeeklyReportUseCase {
     DateTime today,
   ) {
     return [
-      for (var i = 0; i < 7; i++) _day(Dates.addDays(start, i), rituals, logs, today),
+      for (var i = 0; i < 7; i++)
+        _day(Dates.addDays(start, i), rituals, logs, today),
     ];
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
@@ -6,7 +7,11 @@ import '../../core/themes/colors.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/ui/common.dart';
 import '../view_models/login_viewmodel.dart';
-import 'register_sheet.dart';
+import '../../../routing/routes.dart';
+
+/// Login social (Apple/Google) depende de backend (ex.: Firebase Auth).
+/// Oculto até a integração existir.
+const bool _kSocialLoginEnabled = false;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.viewModel});
@@ -90,7 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.only(right: 12),
             child: CircleAvatar(
               backgroundColor: AppColors.primaryContainer,
-              child: const Icon(Icons.person_outline, color: AppColors.onPrimary),
+              child: const Icon(
+                Icons.person_outline,
+                color: AppColors.onPrimary,
+              ),
             ),
           ),
         ],
@@ -175,7 +183,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             : null,
                       ),
                       const SizedBox(height: Dimens.spaceSm),
-                      Row(
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           InkWell(
                             borderRadius: BorderRadius.circular(999),
@@ -183,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
@@ -207,12 +218,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                         : null,
                                   ),
                                   const SizedBox(width: 10),
-                                  Text('Lembrar de mim', style: t.bodyMedium),
+                                  Flexible(
+                                    child: Text(
+                                      'Lembrar de mim',
+                                      style: t.bodyMedium,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
-                          const Spacer(),
                           TextButton(
                             onPressed: () => showSnack(
                               context,
@@ -228,7 +244,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         listenable: vm.login,
                         builder: (context, _) => DecoratedBox(
                           decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(999)),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(999),
+                            ),
                             boxShadow: Dimens.floatingShadow,
                           ),
                           child: FilledButton(
@@ -244,7 +262,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('Entrar no Serene'),
+                                      Flexible(
+                                        child: Text(
+                                          'Entrar no Serene',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
                                       SizedBox(width: 8),
                                       Icon(Icons.arrow_forward),
                                     ],
@@ -278,42 +301,44 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: Dimens.spaceLg),
-              Row(
-                children: [
-                  const Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      'OU CONTINUE COM SUA TRIBO',
-                      style: t.labelSmall?.copyWith(
-                        color: AppColors.onSurfaceVariant,
+              if (_kSocialLoginEnabled) ...[
+                const SizedBox(height: Dimens.spaceLg),
+                Row(
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'OU CONTINUE COM SUA TRIBO',
+                        style: t.labelSmall?.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
                       ),
                     ),
-                  ),
-                  const Expanded(child: Divider()),
-                ],
-              ),
-              const SizedBox(height: Dimens.spaceMd),
-              Row(
-                children: [
-                  Expanded(
-                    child: _SocialButton(
-                      icon: Icons.apple,
-                      label: 'Apple',
-                      onTap: () => _socialUnavailable(context),
+                    const Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: Dimens.spaceMd),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _SocialButton(
+                        icon: Icons.apple,
+                        label: 'Apple',
+                        onTap: () => _socialUnavailable(context),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: Dimens.gutter),
-                  Expanded(
-                    child: _SocialButton(
-                      icon: Icons.g_mobiledata,
-                      label: 'Google',
-                      onTap: () => _socialUnavailable(context),
+                    const SizedBox(width: Dimens.gutter),
+                    Expanded(
+                      child: _SocialButton(
+                        icon: Icons.g_mobiledata,
+                        label: 'Google',
+                        onTap: () => _socialUnavailable(context),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
               const SizedBox(height: Dimens.spaceLg),
               SereneCard(
                 color: AppColors.surfaceContainer,
@@ -364,11 +389,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => showModalBottomSheet<void>(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (_) => RegisterSheet(viewModel: vm),
-                      ),
+                      onTap: () => context.push(Routes.register),
                       child: Text(
                         'Cadastre-se gratuitamente',
                         style: t.bodyLarge?.copyWith(
@@ -420,7 +441,11 @@ class _Hero extends StatelessWidget {
               shape: BoxShape.circle,
               color: AppColors.surfaceLow,
             ),
-            child: const Icon(Icons.spa_outlined, size: 44, color: AppColors.primary),
+            child: const Icon(
+              Icons.spa_outlined,
+              size: 44,
+              color: AppColors.primary,
+            ),
           ),
           Positioned(
             top: 4,
@@ -455,9 +480,8 @@ class _FieldLabel extends StatelessWidget {
     padding: const EdgeInsets.only(left: 6, bottom: 8),
     child: Text(
       text.toUpperCase(),
-      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-        color: AppColors.onSurfaceVariant,
-      ),
+      style: Theme.of(context).textTheme.labelSmall
+          ?.copyWith(color: AppColors.onSurfaceVariant),
     ),
   );
 }

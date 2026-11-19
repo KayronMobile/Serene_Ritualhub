@@ -64,8 +64,12 @@ class RitualRepositoryLocal extends RitualRepository {
       _logs = {
         for (final e in ((lv as List<Object?>?) ?? const []))
           if (e case final Map<String, Object?> m)
-            _logKey(m['ritualId']! as String, DateTime.parse(m['date']! as String)):
-                RitualLog.fromJson(m),
+            _logKey(
+              m['ritualId']! as String,
+              DateTime.parse(m['date']! as String),
+            ): RitualLog.fromJson(
+              m,
+            ),
       };
     }
     return const Result.ok(null);

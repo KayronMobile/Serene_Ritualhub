@@ -236,8 +236,7 @@ class CheckIn {
     context: json['context'] as String?,
     reactions: {
       for (final e
-          in ((json['reactions'] as Map<String, Object?>?) ?? const {})
-              .entries)
+          in ((json['reactions'] as Map<String, Object?>?) ?? const {}).entries)
         Reaction.values.byName(e.key): e.value! as int,
     },
     myReactions: ((json['myReactions'] as List<Object?>?) ?? const [])

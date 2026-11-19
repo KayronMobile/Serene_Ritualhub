@@ -13,6 +13,7 @@ import '../data/repositories/reminder/reminder_repository.dart';
 import '../data/repositories/reminder/reminder_repository_local.dart';
 import '../data/repositories/ritual/ritual_repository.dart';
 import '../data/repositories/ritual/ritual_repository_local.dart';
+import '../data/services/audio_service.dart';
 import '../data/services/biometric_service.dart';
 import '../data/services/image_picker_service.dart';
 import '../data/services/local_storage_service.dart';
@@ -69,6 +70,10 @@ List<SingleChildWidget> get providersLocal => [
     create: (context) => LocalNotificationService(),
   ),
   Provider<BiometricService>(create: (context) => LocalBiometricService()),
+  Provider<AudioService>(
+    create: (context) => JustAudioService(),
+    dispose: (_, audio) => audio.dispose(),
+  ),
   Provider<PhotoService>(create: (context) => ImagePickerPhotoService()),
   ChangeNotifierProvider<AuthRepository>(
     create: (context) => AuthRepositoryLocal(

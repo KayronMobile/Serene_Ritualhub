@@ -88,10 +88,10 @@ class CompleteRitualStepUseCase {
 
     // Rastreadores de saúde (não contabiliza duas vezes o mesmo passo).
     if (!skipped && !alreadyDone) {
-      final minutes = (elapsedSeconds / 60).round().clamp(
-        1,
-        max(1, step.durationMinutes * 3),
-      ).toInt();
+      final minutes = (elapsedSeconds / 60)
+          .round()
+          .clamp(1, max(1, step.durationMinutes * 3))
+          .toInt();
       switch (step.type.metric) {
         case HealthMetric.water:
           await _health.addWater(date, step.waterMl ?? 250);

@@ -39,7 +39,8 @@ class RitualHeroCard extends StatelessWidget {
                 ),
               ),
               PillBadge(
-                label: '${today.completedCount}/${ritual.steps.length} concluído',
+                label:
+                    '${today.completedCount}/${ritual.steps.length} concluído',
                 background: AppColors.secondaryFixed,
                 foreground: AppColors.onSecondaryContainer,
               ),
@@ -67,7 +68,10 @@ class RitualHeroCard extends StatelessWidget {
             child: FilledButton(
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
               ),
               onPressed: onStart,
               child: Row(
@@ -143,7 +147,11 @@ class _StepRow extends StatelessWidget {
             child: done
                 ? const Icon(Icons.check, color: AppColors.onPrimary, size: 18)
                 : isNext
-                ? const Icon(Icons.schedule, color: AppColors.onPrimary, size: 18)
+                ? const Icon(
+                    Icons.schedule,
+                    color: AppColors.onPrimary,
+                    size: 18,
+                  )
                 : null,
           ),
           const SizedBox(width: 14),
@@ -155,14 +163,18 @@ class _StepRow extends StatelessWidget {
                   '$index. $title',
                   style: t.titleSmall?.copyWith(
                     decoration: done ? TextDecoration.lineThrough : null,
-                    color: muted ? AppColors.onSurfaceVariant : AppColors.onSurface,
+                    color: muted
+                        ? AppColors.onSurfaceVariant
+                        : AppColors.onSurface,
                     fontWeight: done ? FontWeight.w500 : FontWeight.w600,
                   ),
                 ),
                 Text(
                   subtitle,
                   style: t.bodySmall?.copyWith(
-                    color: muted ? AppColors.outline : AppColors.onSurfaceVariant,
+                    color: muted
+                        ? AppColors.outline
+                        : AppColors.onSurfaceVariant,
                   ),
                 ),
               ],

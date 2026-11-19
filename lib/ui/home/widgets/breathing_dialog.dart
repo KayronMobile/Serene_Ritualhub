@@ -97,7 +97,9 @@ class _BreathingDialogState extends State<BreathingDialog> {
                     alignment: Alignment.center,
                     child: Text(
                       done ? 'Pronto' : label,
-                      style: t.headlineMedium?.copyWith(color: AppColors.primary),
+                      style: t.headlineMedium?.copyWith(
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                 ),

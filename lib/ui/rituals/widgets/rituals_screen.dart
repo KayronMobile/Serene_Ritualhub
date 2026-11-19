@@ -50,7 +50,9 @@ class RitualsScreen extends StatelessWidget {
               children: [
                 Text(
                   'CONSTRUÇÃO DE HÁBITOS',
-                  style: t.labelSmall?.copyWith(color: AppColors.onSurfaceVariant),
+                  style: t.labelSmall?.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
                 Text('Seus Rituais', style: t.displaySmall),
                 const SizedBox(height: 4),
@@ -72,7 +74,8 @@ class RitualsScreen extends StatelessWidget {
                   _RitualCard(
                     item: item,
                     onPlay: () => context.push(Routes.player(item.ritual.id)),
-                    onEdit: () => context.push(Routes.editRitual(item.ritual.id)),
+                    onEdit: () =>
+                        context.push(Routes.editRitual(item.ritual.id)),
                     onDelete: () => _confirmDelete(context, item),
                   ),
                   const SizedBox(height: Dimens.spaceMd),
@@ -211,10 +214,15 @@ class _RitualCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              const Spacer(),
-              Text(
-                '${r.steps.length} passos · ${r.totalMinutes} min',
-                style: t.labelMedium,
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  '${r.steps.length} passos · ${r.totalMinutes} min',
+                  style: t.labelMedium,
+                  textAlign: TextAlign.end,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -241,7 +249,9 @@ class _RitualCard extends StatelessWidget {
           FilledButton.icon(
             onPressed: onPlay,
             icon: const Icon(Icons.play_arrow),
-            label: Text(item.completedToday ? 'Repetir no player' : 'Iniciar no player'),
+            label: Text(
+              item.completedToday ? 'Repetir no player' : 'Iniciar no player',
+            ),
           ),
         ],
       ),

@@ -2,10 +2,13 @@ import 'dart:async';
 
 import '../../../data/repositories/auth/auth_repository.dart';
 import '../../../data/repositories/ritual/ritual_repository.dart';
+import '../../../data/services/audio_service.dart';
+import '../../../data/services/notification_service.dart';
 import '../../../domain/models/achievement.dart';
 import '../../../domain/models/ritual.dart';
 import '../../../domain/use_cases/complete_ritual_step_use_case.dart';
 import '../../../domain/use_cases/evaluate_achievements_use_case.dart';
+import '../../../domain/use_cases/plan_reminders_use_case.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 import '../../core/view_model.dart';
@@ -18,6 +21,9 @@ class RitualPlayerViewModel extends ViewModel {
     required AuthRepository authRepository,
     required CompleteRitualStepUseCase completeStep,
     required EvaluateAchievementsUseCase evaluateAchievements,
+    NotificationService? notifications,
+    AudioService? audio,
+    PlanRemindersUseCase? planReminders,
     DateTime Function()? clock,
     Duration tick = const Duration(seconds: 1),
   }) : _ritualId = ritualId,
@@ -25,6 +31,9 @@ class RitualPlayerViewModel extends ViewModel {
        _auth = authRepository,
        _completeStep = completeStep,
        _evaluate = evaluateAchievements,
+       _notifications = notifications,
+       _audio = audio,
+       _planReminders = planReminders,
        _clock = clock ?? DateTime.now,
        _tick = tick {
     load = Command0(_load)..execute();
@@ -37,6 +46,9 @@ class RitualPlayerViewModel extends ViewModel {
   final AuthRepository _auth;
   final CompleteRitualStepUseCase _completeStep;
   final EvaluateAchievementsUseCase _evaluate;
+  final NotificationService? _notifications;
+  final AudioService? _audio;
+  final PlanRemindersUseCase? _planReminders;
   final DateTime Function() _clock;
   final Duration _tick;
 
@@ -134,7 +146,37 @@ class RitualPlayerViewModel extends ViewModel {
     _elapsedInStep = 0;
     _timeUp = false;
     _paused = false;
+    _updateOngoing();
+    _syncAmbient();
     notifyListeners();
+  }
+
+  /// Toca o som ambiente do passo atual (ou silencia se não houver).
+  void _syncAmbient() {
+    final sound = step?.ambientSound;
+    if (_soundOn && !_paused && !_finished && sound != null) {
+      _audio?.playAmbient(sound);
+    } else if (sound == null || _finished) {
+      _audio?.stopAmbient();
+    } else {
+      _audio?.pauseAmbient();
+    }
+  }
+
+  /// Notificação fixa "ritual em andamento" com o passo atual e o progresso.
+  void _updateOngoing() {
+    final r = _ritual;
+    final s = step;
+    if (r == null || s == null || _finished) return;
+    final done = _completedIds.length;
+    _notifications?.showOngoing(
+      title: _paused ? '⏸ ${r.name} pausado' : '▶ ${r.name} em andamento',
+      body:
+          'Passo ${_index + 1} de ${r.steps.length}: ${s.title} '
+          '(${s.durationMinutes} min)',
+      progress: done,
+      maxProgress: r.steps.length,
+    );
   }
 
   void _startTimer() {
@@ -148,13 +190,18 @@ class RitualPlayerViewModel extends ViewModel {
     _sessionSeconds++;
     if (_remaining > 0) {
       _remaining--;
-      if (_remaining == 0) _timeUp = true;
+      if (_remaining == 0) {
+        _timeUp = true;
+        if (_soundOn) _audio?.playBell();
+      }
     }
     notifyListeners();
   }
 
   void togglePause() {
     _paused = !_paused;
+    _updateOngoing();
+    _syncAmbient();
     notifyListeners();
   }
 
@@ -167,6 +214,7 @@ class RitualPlayerViewModel extends ViewModel {
 
   void toggleSound() {
     _soundOn = !_soundOn;
+    _syncAmbient();
     notifyListeners();
   }
 
@@ -215,6 +263,11 @@ class RitualPlayerViewModel extends ViewModel {
   Future<void> _finish() async {
     _finished = true;
     _timer?.cancel();
+    await _notifications?.cancelOngoing();
+    await _audio?.stopAmbient();
+    if (_soundOn) await _audio?.playBell();
+    // Atualiza o resumo da sequência e demais lembretes com o novo progresso.
+    await _planReminders?.execute(now: _clock());
     final user = _auth.currentUser;
     if (user != null) {
       final r = await _evaluate.evaluate(userId: user.id, now: _clock());
@@ -226,6 +279,8 @@ class RitualPlayerViewModel extends ViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    _notifications?.cancelOngoing();
+    _audio?.stopAmbient();
     super.dispose();
   }
 }

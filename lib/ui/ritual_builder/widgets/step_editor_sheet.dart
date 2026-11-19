@@ -48,9 +48,8 @@ class _StepEditorSheetState extends State<StepEditorSheet> {
     super.dispose();
   }
 
-  void _changeDuration(int deltaSeconds) => setState(
-    () => _seconds = (_seconds + deltaSeconds).clamp(30, 120 * 60),
-  );
+  void _changeDuration(int deltaSeconds) =>
+      setState(() => _seconds = (_seconds + deltaSeconds).clamp(30, 120 * 60));
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
@@ -101,8 +100,9 @@ class _StepEditorSheetState extends State<StepEditorSheet> {
                 controller: _title,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(hintText: 'Nome do passo'),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Dê um nome ao passo' : null,
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Dê um nome ao passo'
+                    : null,
               ),
               const SizedBox(height: Dimens.spaceLg),
               Text('TIPO', style: t.labelSmall),

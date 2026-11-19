@@ -206,7 +206,9 @@ Future<void> showMinutesSheet(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton.filledTonal(
-                  onPressed: value > 5 ? () => setState(() => value -= 5) : null,
+                  onPressed: value > 5
+                      ? () => setState(() => value -= 5)
+                      : null,
                   icon: const Icon(Icons.remove),
                 ),
                 SizedBox(

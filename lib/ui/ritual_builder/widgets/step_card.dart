@@ -45,8 +45,11 @@ class StepCard extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'PASSO ${(index + 1).toString().padLeft(2, '0')}',
-                            style: t.labelSmall?.copyWith(color: tint.foreground),
+                            text:
+                                'PASSO ${(index + 1).toString().padLeft(2, '0')}',
+                            style: t.labelSmall?.copyWith(
+                              color: tint.foreground,
+                            ),
                           ),
                           TextSpan(
                             text: '  •  ${step.type.label}',
@@ -136,7 +139,10 @@ class StepCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceLow,
                   borderRadius: BorderRadius.circular(999),
@@ -157,7 +163,9 @@ class StepCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: step.ambientSound,
-                              style: const TextStyle(fontWeight: FontWeight.w700),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ],
                         ),
@@ -189,7 +197,11 @@ class StepConnector extends StatelessWidget {
       children: [
         for (var i = 0; i < 3; i++)
           Container(width: 2, height: 4, color: AppColors.outlineVariant),
-        const Icon(Icons.keyboard_arrow_down, size: 14, color: AppColors.outline),
+        const Icon(
+          Icons.keyboard_arrow_down,
+          size: 14,
+          color: AppColors.outline,
+        ),
       ],
     ),
   );

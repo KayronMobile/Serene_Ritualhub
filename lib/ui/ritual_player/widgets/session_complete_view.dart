@@ -80,7 +80,10 @@ class SessionCompleteView extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _Stat(label: 'Passos', value: '$done/${ritual.steps.length}'),
+              child: _Stat(
+                label: 'Passos',
+                value: '$done/${ritual.steps.length}',
+              ),
             ),
             const SizedBox(width: Dimens.gutter),
             Expanded(
@@ -102,9 +105,7 @@ class SessionCompleteView extends StatelessWidget {
                 Icon(Icons.groups_outlined, color: AppColors.secondary),
                 SizedBox(width: 12),
                 Expanded(
-                  child: Text(
-                    'Check-in automático enviado para sua tribo! 🔥',
-                  ),
+                  child: Text('Check-in automático enviado para sua tribo! 🔥'),
                 ),
               ],
             ),
@@ -166,7 +167,10 @@ class _Stat extends StatelessWidget {
       padding: const EdgeInsets.all(Dimens.spaceMd),
       child: Column(
         children: [
-          Text(value, style: t.headlineLarge?.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            value,
+            style: t.headlineLarge?.copyWith(fontWeight: FontWeight.w700),
+          ),
           Text(label, style: t.bodySmall),
         ],
       ),

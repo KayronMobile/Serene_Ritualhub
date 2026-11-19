@@ -71,8 +71,7 @@ class ReportsViewModel extends ViewModel {
 
   String get weekLabel => Dates.weekRange(weekStart);
 
-  String get currentWeekLabel =>
-      Dates.weekRange(Dates.startOfWeek(_clock()));
+  String get currentWeekLabel => Dates.weekRange(Dates.startOfWeek(_clock()));
 
   WeeklyReport? _report;
   WeeklyReport? get report => _report;
@@ -160,7 +159,9 @@ class ReportsViewModel extends ViewModel {
   String shareText() {
     final r = _report;
     if (r == null) return '';
-    final medals = _medals.where((a) => a.unlocked).map((a) => a.definition.title);
+    final medals = _medals
+        .where((a) => a.unlocked)
+        .map((a) => a.definition.title);
     return [
       '🌿 Meu ritmo da semana (${Dates.weekRange(r.weekStart)})',
       '• Consistência geral: ${(r.consistency * 100).round()}%',

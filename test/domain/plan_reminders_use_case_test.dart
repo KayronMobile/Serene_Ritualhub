@@ -53,22 +53,42 @@ void main() {
     now: now,
   );
 
-  test('agenda o início do ritual com antecedência em cada dia ativo', () {
+  test('agenda aviso 5 min antes e no horário em cada dia ativo', () {
     final ritual = plan().where((r) => r.channel == ReminderChannel.rituals);
-    expect(ritual.length, 5); // ritual noturno está com lembrete desligado
-    expect(ritual.every((r) => r.minutesOfDay == 7 * 60 - 15), isTrue);
+    expect(ritual.length, 10); // ritual noturno está com lembrete desligado
+    expect(ritual.map((r) => r.minutesOfDay).toSet(), {7 * 60 - 5, 7 * 60});
     expect(ritual.map((r) => r.weekday).toSet(), {1, 2, 3, 4, 5});
   });
 
-  test('lembretes de água de hoje informam quanto falta e respeitam o horário', () {
-    final water = plan(waterToday: 500)
-        .where((r) => r.channel == ReminderChannel.water)
-        .toList();
-    final today = water.where((r) => Dates.isSameDay(r.date!, now)).toList();
-    expect(today, isNotEmpty);
-    expect(today.every((r) => r.minutesOfDay > 10 * 60), isTrue);
-    expect(today.first.body, contains('1,5 L'));
+  test('resumo da sequência mostra os dias e convites de retorno', () {
+    final all = PlanRemindersUseCase.build(
+      settings: const ReminderSettings(),
+      rituals: const [],
+      goals: const HealthGoals(),
+      today: DailyHealthLog.empty(Dates.dateOnly(now)),
+      now: now,
+      streakDays: 4,
+    );
+    final streak = all.where((r) => r.channel == ReminderChannel.streak);
+    expect(streak.first.title, contains('4 dias'));
+    expect(streak.first.minutesOfDay, 20 * 60);
+    final comeback = all.where((r) => r.channel == ReminderChannel.engagement);
+    expect(comeback.length, 3);
+    expect(comeback.every((r) => r.date!.isAfter(now)), isTrue);
   });
+
+  test(
+    'lembretes de água de hoje informam quanto falta e respeitam o horário',
+    () {
+      final water = plan(waterToday: 500)
+          .where((r) => r.channel == ReminderChannel.water)
+          .toList();
+      final today = water.where((r) => Dates.isSameDay(r.date!, now)).toList();
+      expect(today, isNotEmpty);
+      expect(today.every((r) => r.minutesOfDay > 10 * 60), isTrue);
+      expect(today.first.body, contains('1,5 L'));
+    },
+  );
 
   test('água silencia no dia quando a meta já foi batida', () {
     final water = plan(waterToday: 2100)
