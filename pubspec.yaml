@@ -1,0 +1,43 @@
+name: ritualhub
+description: >-
+  Serene · RitualHub — rituais sequenciais, rastreadores de saúde e desafios
+  coletivos com amigos. Arquitetura MVVM conforme docs.flutter.dev/app-architecture.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+  flutter: ">=3.47.6"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Injeção de dependências (recomendação oficial do guia de arquitetura)
+  provider: ^6.1.5
+  # Roteamento declarativo (17.x ainda usa package:flutter/material; a 18.x
+  # migrou para material_ui — veja o README)
+  go_router: ^17.2.0
+  logging: ^1.3.0
+
+  # Persistência local (camada de serviços)
+  shared_preferences: ^2.5.3
+  # Lembretes inteligentes
+  flutter_local_notifications: ^23.0.2
+  timezone: ">=0.10.1 <1.0.0"
+  # Check-ins fotográficos
+  image_picker: ^1.1.2
+  # Login por biometria
+  local_auth: ^3.0.2
+  # Tipografia do design system (Plus Jakarta Sans)
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
